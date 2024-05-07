@@ -38,6 +38,7 @@ def generate_text():
     prompt = pipeline.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     result = pipeline(prompt, max_new_tokens=512, do_sample=True, temperature=0.9, top_k=10, top_p=0.95)
     generated_output = result[0]['generated_text']
+    print(generated_output)
     return jsonify({'generated_text': generated_output})
 
 if __name__ == '__main__':
