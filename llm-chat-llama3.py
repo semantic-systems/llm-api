@@ -16,14 +16,12 @@ from waitress import serve
 #os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 app = Flask(__name__)
 #model = "mistralai/Mixtral-8x7B-Instruct-v0.1"
-model="google/gemma-2b-it"
 
-tokenizer = AutoTokenizer.from_pretrained(model)
 pipeline = transformers.pipeline(
     "text-generation",
-    model=model,
+    model="meta-llama/Meta-Llama-3-8B-Instruct",
     # to run the model on CPU wen need to ignore the quantization in the following line 
-#    model_kwargs={"load_in_8bit": True},
+    model_kwargs={"torch_dtype": torch.bfloat16},
     device=0 if torch.cuda.is_available() else -1
 )
 
@@ -36,9 +34,11 @@ def generate_text():
 
     messages = data['messages']
     prompt = pipeline.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-    result = pipeline(prompt, max_new_tokens=512, do_sample=True, temperature=0.9, top_k=10, top_p=0.95)
-    generated_output = result[0]['generated_text']
-    print(generated_output)
+    terminators = [pipeline.tokenizer.eos_token_id,pipeline.tokenizer.convert_tokens_to_ids("<|eot_id|>")]
+    outputs = pipeline(prompt,max_new_tokens=256,eos_token_id=terminators,do_sample=True,temperature=0.1,top_p=0.9)
+    result = outputs[0]["generated_text"][len(prompt):]
+    print("result:", result)
+    generated_output = result
     return jsonify({'generated_text': generated_output})
 
 if __name__ == '__main__':
