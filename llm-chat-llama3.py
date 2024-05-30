@@ -178,8 +178,14 @@ swagger_template = {
                                     "items": {
                                         "type": "object",
                                         "properties": {
-                                            "role": {"type": "string"},
-                                            "content": {"type": "string"}
+                                            "role": {
+                                                "type": "string",
+                                                "default": "user"
+                                            },
+                                            "content": {
+                                                "type": "string",
+                                                "default": "What is the height of the Eiffel Tower?"
+                                            }
                                         },
                                         "required": ["role", "content"]
                                     },
