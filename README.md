@@ -6,6 +6,7 @@ This API provides text generation and classification capabilities using a pre-tr
 
 To run the API, execute the following command:
 
+```sh
 CUDA_VISIBLE_DEVICES=1 python llm-chat-llama3.py
 
 
