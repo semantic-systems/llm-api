@@ -53,29 +53,38 @@ def generate_text():
                     properties:
                       role:
                         type: string
+                        default: "system"
+                        description: "The role of the message (e.g., system, user)"
                       content:
                         type: string
-                  description: List of input messages
+                        default: "Utilize prompt engineering to classify the given text accurately into one of the following predefined categories:\\n    Environment\\n    Soziales\\n    Governance\\n    Keine Armut\\n    Kein Hunger\\n    E-Umweltschutz\\n    E-Klimaschutz\\n    E-Erneuerbare Energie\\n    E-Emissionsreduktion\\n    E-Ressourceneffizienz\\n    S-Arbeitssicherheit\\n    S-Gesundheitsschutz\\n    S-Arbeitsbedingungen\\nLimit your response to the identified class, nothing else. Optimize for increased accuracy."
+                        description: "The content of the message"
+                  description: "List of input messages"
+                  default:
+                    - role: "system"
+                      content: "Utilize prompt engineering to classify the given text accurately into one of the following predefined categories:\\n    Environment\\n    Soziales\\n    Governance\\n    Keine Armut\\n    Kein Hunger\\n    E-Umweltschutz\\n    E-Klimaschutz\\n    E-Erneuerbare Energie\\n    E-Emissionsreduktion\\n    E-Ressourceneffizienz\\n    S-Arbeitssicherheit\\n    S-Gesundheitsschutz\\n    S-Arbeitsbedingungen\\nLimit your response to the identified class, nothing else. Optimize for increased accuracy."
+                    - role: "user"
+                      content: "Am Wochenende fand ein tolles soziales Event statt. Die Gemeinschaft sammelte Spenden für wohltätige Zwecke und stärkte das Bewusstsein für lokale Anliegen. Mit Musik, Essen und Aktivitäten für alle Altersgruppen war die Veranstaltung ein großer Erfolg und förderte den Zusammenhalt der Gemeinde."
                 temperature:
                   type: number
                   default: 0.7
-                  description: Sampling temperature
+                  description: Sampling temperature (optional)
                 top_p:
                   type: number
                   default: 0.9
-                  description: Nucleus sampling parameter
+                  description: Nucleus sampling parameter (optional)
                 max_new_tokens:
                   type: integer
                   default: 256
-                  description: Maximum number of new tokens to generate
+                  description: Maximum number of new tokens to generate (optional)
                 max_seq_len:
                   type: integer
                   default: 1024
-                  description: Maximum sequence length
+                  description: Maximum sequence length (optional)
                 max_gen_len:
                   type: integer
                   default: 512
-                  description: Maximum generation length
+                  description: Maximum generation length (optional)
       responses:
         200:
           description: Generated text
@@ -180,16 +189,58 @@ swagger_template = {
                                         "properties": {
                                             "role": {
                                                 "type": "string",
-                                                "default": "user"
+                                                "default": "system"
                                             },
                                             "content": {
                                                 "type": "string",
-                                                "default": "What is the height of the Eiffel Tower?"
+                                                "default": (
+                                                    "Utilize prompt engineering to classify the given text accurately into one of the following predefined categories:\n"
+                                                    "    Environment\n"
+                                                    "    Soziales\n"
+                                                    "    Governance\n"
+                                                    "    Keine Armut\n"
+                                                    "    Kein Hunger\n"
+                                                    "    E-Umweltschutz\n"
+                                                    "    E-Klimaschutz\n"
+                                                    "    E-Erneuerbare Energie\n"
+                                                    "    E-Emissionsreduktion\n"
+                                                    "    E-Ressourceneffizienz\n"
+                                                    "    S-Arbeitssicherheit\n"
+                                                    "    S-Gesundheitsschutz\n"
+                                                    "    S-Arbeitsbedingungen\n"
+                                                    "Limit your response to the identified class, nothing else. Optimize for increased accuracy."
+                                                )
                                             }
                                         },
                                         "required": ["role", "content"]
                                     },
-                                    "description": "List of input messages"
+                                    "description": "List of input messages",
+                                    "default": [
+                                        {
+                                            "role": "system",
+                                            "content": (
+                                                "Utilize prompt engineering to classify the given text accurately into one of the following predefined categories:\n"
+                                                "    Environment\n"
+                                                "    Soziales\n"
+                                                "    Governance\n"
+                                                "    Keine Armut\n"
+                                                "    Kein Hunger\n"
+                                                "    E-Umweltschutz\n"
+                                                "    E-Klimaschutz\n"
+                                                "    E-Erneuerbare Energie\n"
+                                                "    E-Emissionsreduktion\n"
+                                                "    E-Ressourceneffizienz\n"
+                                                "    S-Arbeitssicherheit\n"
+                                                "    S-Gesundheitsschutz\n"
+                                                "    S-Arbeitsbedingungen\n"
+                                                "Limit your response to the identified class, nothing else. Optimize for increased accuracy."
+                                            )
+                                        },
+                                        {
+                                            "role": "user",
+                                            "content": "Am Wochenende fand ein tolles soziales Event statt. Die Gemeinschaft sammelte Spenden für wohltätige Zwecke und stärkte das Bewusstsein für lokale Anliegen. Mit Musik, Essen und Aktivitäten für alle Altersgruppen war die Veranstaltung ein großer Erfolg und förderte den Zusammenhalt der Gemeinde."
+                                        }
+                                    ]
                                 },
                                 "temperature": {
                                     "type": "number",
@@ -238,6 +289,8 @@ swagger_template = {
         }
     }
 }
+
+
 
 with open('static/swagger.json', 'w') as f:
     json.dump(swagger_template, f)
